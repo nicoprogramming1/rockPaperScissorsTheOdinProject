@@ -7,7 +7,10 @@ The intention of this exercise for me is to put into practice not just the JS sy
 The game will be played entirely by console, so no UI is needed.
 A human player will play against the computer over 5 rounds, and the score will decide the winner at the end.
 
-There will be some limitations, such as using only a prompt to ask the human player for their selection, no selection options list.
+There will be some limitations, such as: 
+- Using only a prompt to ask the human player for their selection
+- No selection options list
+- User cancellation of the prompt will not be taken into account
 
 ### Planning
 
@@ -16,7 +19,7 @@ There are a few main components we can identify right away:
 - Computer choice
 - Human choice              (human will be 'user' from now on)
 - Score
-- The round
+- A round
 - The game (5 rounds)
 
 ### Pseudo-code
