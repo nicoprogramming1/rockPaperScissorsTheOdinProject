@@ -1,54 +1,62 @@
+
 /*
 Function to deliver a random choice from computer player
-It will generate a random number between 1 and 3 inclusively
+It generates a random number between 1 and 3 inclusively
 */
 
-function getComputerChoice() {
-    let choice = Math.floor(Math.random() * 3 ) + 1;
+function getComputerChoiceNumber() {
+    let choiceNumber = Math.floor(Math.random() * 3 ) + 1;
+    return choiceNumber;
+}
+
+/*
+Function to convert the numeric choice from the computer into
+the corresponding word value: 'rock', 'paper', or 'scissors'.
+*/
+
+function getComputerChoice(computerChoiceNumber) {
+    let choice;
+    switch(computerChoiceNumber) {
+        case 1:
+        choice = "rock";
+        break;
+        case 2:
+        choice = "paper";
+        break;
+        case 3:
+        choice = "scissors";
+        break;
+    }
     return choice;
 }
 
 /*
-Function to ask human player to choose one of the options
+Function to ask user to choose one of the options
 It's limited to the prompt only and must handle case
 and whitespace to ensure the correct selection
-Also, it must warning the human player if types an invalid word
-(it will only be accepted if they type one of the three options)
+
+Validates and warns the user if enters an invalid word
+(the only valid options are rock, paper or scissors)
 */
 
-function getHumanChoice() {
-    let choice;
-    while (true) {
-        let word = prompt("Which is it going to be? Rock, paper or scissors?");
-        choice = word.toLowerCase().trim();
-        if (word === "rock" || word === "paper" || word === "scissors") {
-            break;
+function getUserChoice() {
+    let choice = "";
+    do {
+        let word = prompt("Which is it going to be? Rock, paper or scissors?").toLowerCase().trim();
+        if(word === "rock" || word === "paper" || word === "scissors") {
+            choice = word;
         }
         else {
             alert("Invalid option. Please choose 'rock', 'paper' or 'scissors'");
         }
     }
+    while(!choice);
     return choice;
 }
 
 
-let computerChoice = getComputerChoice();
-let humanChoice = getHumanChoice();
+let userChoice = getUserChoice();
+let computerChoice = getComputerChoice(getComputerChoiceNumber());
 
-console.log(getComputerChoice());
-console.log(getHumanChoice());
-
-
-/*
-switch(choice) {
-    case 1:
-    choice = "Rock";
-    break;
-    case 2:
-    choice = "Paper";
-    break;
-    case 3:
-    choice = "Scissors";
-    break;
-}
-*/
+console.log(userChoice);
+console.log(computerChoice);
