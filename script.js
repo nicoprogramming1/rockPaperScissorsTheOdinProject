@@ -11,54 +11,16 @@ function getComputerChoiceNumber() {
 
 
 /*
-Converts the numeric choice received from the computer in computerChoiceNumber() function into
+Converts the numeric choice received from the computer in getComputerChoiceNumber() function into
 the corresponding word value: 'rock', 'paper', or 'scissors'
 */
 
-function getComputerChoice(computerChoiceNumber) {
-    let choice = "";
-    switch(computerChoiceNumber) {
-        case 1:
-        choice = "rock";
-        break;
-        case 2:
-        choice = "paper";
-        break;
-        case 3:
-        choice = "scissors";
-        break;
+function getTextChoiceFromNumber(choiceNumber) {
+    switch(choiceNumber) {
+        case 1: return "rock";
+        case 2: return "paper";
+        case 3: return "scissors";
     }
-    return choice;
-}
-
-
-/*
-Ask user to choose one of the options and saves it in "choice" variable
-It's limited to the prompt only and must handle case
-and whitespace to ensure the correct selection
-
-Validates and warns the user if enters an invalid word
-(the only valid options are rock, paper or scissors)
-
-*/
-
-function getUserChoice() {
-    let choice = "";
-    do {
-        const userInput = prompt("Which is it going to be? Rock, paper or scissors?").toLowerCase().trim();
-        if(
-            userInput === "rock" ||
-            userInput === "paper" ||
-            userInput === "scissors"
-        ) {
-            choice = userInput;
-        }
-        else {
-            alert("Invalid option. Please choose 'rock', 'paper' or 'scissors'");
-        }
-    }
-    while(!choice);
-    return choice;
 }
 
 
@@ -70,7 +32,7 @@ every match incrementing the corresponding winner score by 1 but also the round
 
 function playRound(userChoice, computerChoice) {
     if(userChoice === computerChoice) {
-        alert("It's a tie!");
+        roundMessage += "It's a tie! ";
     }
     else if(
         (userChoice === "rock" && computerChoice === "scissors") ||
@@ -78,35 +40,41 @@ function playRound(userChoice, computerChoice) {
         (userChoice === "scissors" && computerChoice === "paper")
     ) {
         userScore++;
-        alert("You win the round!");
+        roundMessage += "You win the round! ";
     }
     else {
         computerScore++;
-        alert("You lose the round");
+        roundMessage += "You lose the round.. ";
     }
     ++round;
 }
 
 
 /*
-Controls the flow of the game and gets both player choices,
-iterating through each round and informs the user about the choices made by both players, the current score,
-and the current round number
+Controls the flow of the game, receives user choice by arg and gets the computer choices
+Informs the user about the rounds, score and result
+After round 5 announce the winner and offers a reboot btn (exchanging buttons)
 */
 
-function playGame() {
-    for(let i = 0; i < 5; i++) {
-        const userChoice = getUserChoice();     // constant variables for both player choices
-        const computerChoice = getComputerChoice(getComputerChoiceNumber());
 
-        console.log(`You have selected ${userChoice}`);
-        console.log(`Your rival chooses ${computerChoice}`);
-        playRound(userChoice, computerChoice);
-        console.log(`Score || Player: ${userScore} - Rival: ${computerScore} || Round: ${round}`);
-        console.log("------------------------");
+function playGame(userChoice) {    
+
+    const computerChoice = getTextChoiceFromNumber(getComputerChoiceNumber());
+    
+    console.log(`You have selected ${userChoice}`);
+    console.log(`Your rival chooses ${computerChoice}`);
+    playRound(userChoice, computerChoice);
+    console.log(`Score || Player: ${userScore} - Rival: ${computerScore} || Round: ${round}`);
+    console.log("------------------------");
+
+    if (round < 5) {
+        roundMessage += `Round ${round} complete, select your choice for the next one! `;
+        alert(roundMessage);
+        roundMessage = '';
+    } else {
+        announceWinner(userScore, computerScore);
+        exchangeBtns();
     }
-
-    announceWinner(userScore, computerScore);
 }
 
 
@@ -128,8 +96,59 @@ function announceWinner(userScore, computerScore) {
 }
 
 
-let userScore = 0; 
-let computerScore = 0;  // global variables for player scores and round
-let round = 0;
+function rebootGame() {
+    userScore = 0;
+    computerScore = 0;
+    round = 0;
+    exchangeBtns();
+    console.clear();
+    welcome();
+}
 
-playGame();     // program trigger
+
+function exchangeBtns() {
+    while(container.firstChild) {
+        container.firstChild.remove();
+    }
+
+    if(round === 5) {
+        container.appendChild(reboot);
+    }
+    else {
+        container.appendChild(rock);
+        container.appendChild(paper);
+        container.appendChild(scissors);
+    }    
+}
+
+function welcome() {
+    return alert("Welcome, please select your first choice!");
+}
+
+
+let userScore = 0; 
+let computerScore = 0;  // global variables for player scores and round info
+let round = 0;
+let roundMessage = '';
+
+const container = document.getElementById("container");
+const rock = document.createElement("button");
+const paper = document.createElement("button");
+const scissors = document.createElement("button");
+const reboot = document.createElement("button");
+
+rock.textContent = "Rock";
+paper.textContent = "Paper";
+scissors.textContent = "Scissors";
+reboot.textContent = "Reboot";
+
+rock.addEventListener('click', () => playGame("rock"));
+paper.addEventListener('click', () => playGame("paper"));
+scissors.addEventListener('click', () => playGame("scissors"));
+reboot.addEventListener('click', rebootGame);
+
+container.appendChild(rock);
+container.appendChild(paper);
+container.appendChild(scissors);
+
+welcome();
